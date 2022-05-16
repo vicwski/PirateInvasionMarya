@@ -4,7 +4,8 @@ const Bodies = Matter.Bodies
 const Constraint = Matter.Constraint
 var engine, world, backgroundImg
 
-var canvas, angle, tower, ground, cannon
+var canvas, angle, tower, ground
+var cannon, cannonball
 var score = 0
 
 function preload() {
@@ -28,13 +29,15 @@ function setup() {
   World.add(world, tower)
 
   cannon = new Cannon(180, 110, 130, 100, angle)
+  cannonball = new CannonBall(cannon.x, cannon.y)
+
 }
 
 function draw() {
   image(backgroundImg, 0, 0, width, height)
 
   Engine.update(engine)
-  
+
   rect(ground.position.x, ground.position.y, width * 2, 1)
   push()
   imageMode(CENTER)
@@ -42,4 +45,5 @@ function draw() {
   pop()
 
   cannon.display()
+  cannonball.display()
 }
