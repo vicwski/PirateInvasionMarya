@@ -2,11 +2,10 @@ const Engine = Matter.Engine
 const World = Matter.World
 const Bodies = Matter.Bodies
 const Constraint = Matter.Constraint
-var engine, world, backgroundImg
 
-var canvas, angle, tower, ground
-var cannon, cannonball
-var score = 0
+var engine, world, backgroundImg
+var canvas, angle, tower, ground, cannon
+var cannonBall
 
 function preload() {
   backgroundImg = loadImage('./assets/background.gif')
@@ -18,32 +17,41 @@ function setup() {
   engine = Engine.create()
   world = engine.world
 
-  var options = {
-    isStatic: true
-  }
+  angleMode(DEGREES)
+  angle = 15
 
-  ground = Bodies.rectangle(0, height - 1, width * 2, 1, options)
+  ground = Bodies.rectangle(0, height - 1, width * 2, 1, { isStatic: true })
   World.add(world, ground)
 
-  tower = Bodies.rectangle(160, 350, 160, 310, options)
+  tower = Bodies.rectangle(160, 350, 160, 310, { isStatic: true })
   World.add(world, tower)
-
   cannon = new Cannon(180, 110, 130, 100, angle)
-  cannonball = new CannonBall(cannon.x, cannon.y)
-
+  cannonBall = new CannonBall(cannon.x, cannon.y)
 }
 
 function draw() {
+  background(189)
   image(backgroundImg, 0, 0, width, height)
 
   Engine.update(engine)
 
+  push()
+  fill('brown')
+  rectMode(CENTER)
   rect(ground.position.x, ground.position.y, width * 2, 1)
+  pop()
+
   push()
   imageMode(CENTER)
   image(towerImage, tower.position.x, tower.position.y, 160, 310)
   pop()
 
   cannon.display()
-  cannonball.display()
+  cannonBall.display()
+}
+
+function keyReleased() {
+  if (keyCode === DOWN_ARROW) {
+    cannonBall.shoot()
+  }
 }
