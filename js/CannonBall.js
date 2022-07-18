@@ -6,7 +6,17 @@ class CannonBall {
     this.r = 30
     this.body = Bodies.circle(x, y, this.r, options)
     this.image = loadImage('./assets/cannonball.png')
+    this.trajectory = []
     World.add(world, this.body)
+  }
+
+  remove(index) {
+    Matter.Body.setVelocity(this.body, { x: 0, y: 0 })
+
+    setTimeout(() => {
+      Matter.World.remove(world, this.body)
+      delete balls[index]
+    }, 1000)
   }
 
   shoot() {
@@ -22,10 +32,23 @@ class CannonBall {
   }
 
   display() {
+    var angle = this.body.angle
     var pos = this.body.position
+
     push()
+    translate(pos.x, pos.y)
+    rotate(angle)
     imageMode(CENTER)
-    image(this.image, pos.x, pos.y, this.r, this.r)
+    image(this.image, 0, 0, this.r, this.r)
     pop()
+
+    if (this.body.velocity.x > 0 && pos.x > 10) {
+      var position = [pos.x, pos.y]
+      this.trajectory.push(position)
+    }
+
+    for (var i = 0; i < this.trajectory.length; i++) {
+      image(this.image, this.trajectory[i][0], this.trajectory[i][1], 5, 5)
+    }
   }
 }
